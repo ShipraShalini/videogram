@@ -21,9 +21,3 @@ urlpatterns = [
         'delete': 'destroy'
     }), name='friendrequest'),
 ]
-
-urlpatterns = [
-    path('signup', CreateUser.as_view(), name='create_user'),
-    path('signin', CreateUser.as_view(), name='create_user'),
-    path('user', UserView.as_view(), name='user'),
-]
