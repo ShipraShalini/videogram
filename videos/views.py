@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from common.jsonresponse import JSONResponse
 
-from videos.videohandler import VideoHandler
+from videos.videohandler import VideoHandler, VideoShareHandler
 
 
 class VideoView(ModelViewSet):
@@ -66,9 +66,11 @@ class VideoView(ModelViewSet):
 class ShareVideoView(APIView):
     """API class to share videos."""
 
-    def put(self, request, video_id, *args, **kwargs):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, video_id, *args, **kwargs):
         data = request.data
-        video_details = VideoHandler().share(
+        video_details = VideoShareHandler().share(
             user=request.user,
             video_id=video_id,
             friend_ids=data.get('friend_ids'),
@@ -78,22 +80,16 @@ class ShareVideoView(APIView):
             status=200
         )
 
-
-class UnShareVideoView(APIView):
-    """API class to stop sharing videos."""
-
-    permission_classes = (IsAuthenticated,)
-
-    def put(self, request, video_id, *args, **kwargs):
-        friend_id = request.data.get('friend_id')
-        if not friend_id:
+    def destroy(self, request, video_id, *args, **kwargs):
+        friend_ids = request.data.get('friend_ids')
+        if not friend_ids:
             raise ValidationError(
                 'Please provide Friend id to stop sharing videos.'
             )
-        video_details = VideoHandler().unshare(
+        video_details = VideoShareHandler().unshare(
             user=request.user,
             video_id=video_id,
-            friend_id=friend_id
+            friend_ids=friend_ids
         )
         return JSONResponse(
             data={'video_details': video_details},

@@ -1,4 +1,4 @@
-"""SignEasy URL Configuration
+"""videogram URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -13,12 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import re_path, include
+from django.urls import include, path
+
 
 urlpatterns = [
-    re_path(r'^friends/',
-            include('friends.urls', namespace='friends')),
-    re_path(r'^videos/', include('videos.urls', namespace='videos')),
-    re_path(r'^user/', include('friends.user_urls', namespace='user'))
+    path('auth/', include('rest_framework.urls')),
+    path('friends/', include('friends.urls', namespace='friends')),
+    path('videos/', include('videos.urls', namespace='videos')),
+    path('user/', include('friends.user_urls', namespace='user'))
 
 ]
